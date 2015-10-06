@@ -24,6 +24,7 @@ public class Client extends UntypedActor {
 
     private ActorSelection worker;
     private ActorSelection worker1;
+    private Log4JStopWatch stopWatch;
 
     public static void main(String[] args) throws Exception {
         startSystem();
@@ -38,9 +39,14 @@ public class Client extends UntypedActor {
     @Override
     public void onReceive(Object message) throws Exception {
         if (message instanceof String) {
-            Log4JStopWatch stopWatch = new Log4JStopWatch("Client");
             System.out.println(message);
-            stopWatch.stop();
+
+            //После подтверждения последнего сообщения - закрываю систему
+            String str=(String)(message);
+            if(str.substring(0,2).equals("99")) {
+                context().stop(self());
+                stopWatch.stop();
+            }
         }
     }
 
@@ -49,6 +55,7 @@ public class Client extends UntypedActor {
         logger.info("Start Client");
         final String path = "akka.tcp://WorkerSystem@127.0.0.1:2550/user/worker";
         worker = context().system().actorSelection(path);
+        stopWatch=new Log4JStopWatch("Client");
         run();
     }
 
@@ -64,6 +71,7 @@ public class Client extends UntypedActor {
             for (int i = 0; i < 100; i++) {
                 worker.tell(makeRequest(), self());
             }
+
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }

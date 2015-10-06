@@ -18,7 +18,7 @@ public class Sender extends UntypedActor {
     public void onReceive(Object message) throws Exception {
         if (message instanceof String) {
             send(message.toString());
-            sender().tell(message, noSender());
+            sender().tell(message, noSender()); //фактически возвращаем ACK
         }
     }
 

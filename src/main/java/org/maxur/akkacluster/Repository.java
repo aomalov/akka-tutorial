@@ -56,15 +56,16 @@ public class Repository extends UntypedActor {
 
     @Override
     public void preStart() throws Exception {
-        logger.info("Start Repository");
+        logger.info(format("Start Repository (%s)",port));
         sender = context().actorOf(Props.create(Sender.class));
     }
 
     @Override
     public void postStop() throws Exception {
-        logger.info("Stop Repository");
+        logger.info(format("Stop Repository (%s)",port));
     }
 
+    //TODO implement persistance
     private void save(String response) throws InterruptedException {
         // Имитация бурной деятельности
         Thread.sleep(100);

@@ -48,6 +48,7 @@ public class Worker extends UntypedActor {
 
     @Override
     public void postStop() throws Exception {
+        //todo router does not properly deliver the stop message to repositories
         router.tell(PoisonPill.getInstance(), noSender());
         logger.info("Stop Worker");
     }
